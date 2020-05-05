@@ -74,6 +74,9 @@ def step_impl(context):
 
 @given("web browser is at e-shop login page")
 def step_impl(context):
+    context.browser.find_element(By.CSS_SELECTOR, ".dropdown .hidden-xs").click()
+    context.browser.find_element(By.LINK_TEXT, "Logout").click()
+
     context.driver.get('http://mys01.fit.vutbr.cz:8014/index.php?route=account/login')
 
 
