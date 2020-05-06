@@ -1,4 +1,4 @@
-from behave import given, when, then  # pylint: disable=no-name-in-module
+from behave import *  # pylint: disable=no-name-in-module
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 

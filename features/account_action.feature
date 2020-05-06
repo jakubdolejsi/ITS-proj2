@@ -12,7 +12,7 @@ Feature: User account operations
     Given web browser is at e-shop login page
     And  all required fields are filled
     When user clicks on "Login" button
-    Then user is logged in
+    Then user is logged
 
  Scenario: Logout
    Given web browser is at e-shop site

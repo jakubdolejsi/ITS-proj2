@@ -1,12 +1,13 @@
 import time
 
-from behave import given, when, then  # pylint: disable=no-name-in-module
+from behave import *  # pylint: disable=no-name-in-module
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 import string
 import random
 
 mail = ''
+
 
 def generate_name():
     letters = string.ascii_lowercase
@@ -20,9 +21,8 @@ def step_impl(context):
 
 @when("all required fields are filled")
 def step_impl(context):
-
     global mail
-    mail= generate_name()
+    mail = generate_name()
     mail = mail + '@gmail.com'
 
     context.driver.find_element(By.ID, "input-firstname").click()
@@ -51,7 +51,6 @@ def step_impl(context):
     context.driver.find_element(By.ID, "input-confirm").click()
     context.driver.find_element(By.ID, "input-confirm").send_keys("12345")
     context.mail = mail
-    
 
 
 @step("privacy policy is accepted")
@@ -72,11 +71,12 @@ def step_impl(context):
 
     context.driver.find_element_by_xpath('/html/body/div[2]/div/div/div/div/a').click()
 
+
 @given("web browser is at e-shop login page")
 def step_impl(context):
-    context.driver.find_element(By.CSS_SELECTOR, ".dropdown .hidden-xs").click()
-    time.sleep(1)
-    context.driver.find_element(By.LINK_TEXT, "Logout").click()
+    context.driver.find_element_by_xpath('/html/body/nav/div/div[2]/ul/li[2]/a').click()
+    context.driver.find_element_by_xpath('/html/body/nav/div/div[2]/ul/li[2]/ul/li[5]/a').click()
+    time.sleep(4)
 
     context.driver.get('http://mys01.fit.vutbr.cz:8014/index.php?route=account/login')
 
@@ -94,10 +94,10 @@ def step_impl(context):
 
 @when('user clicks on "Login" button')
 def step_impl(context):
-
     context.driver.find_element_by_xpath('/html/body/div[2]/div/div/div/div[2]/div/form/input').click()
 
-@then("user is logged in")
+
+@then("user is logged")
 def step_impl(context):
     context.driver.get('http://mys01.fit.vutbr.cz:8014/index.php?route=account/account')
     account = context.driver.find_element_by_xpath('/html/body/div[2]/div/div/h2[1]').text
@@ -107,21 +107,39 @@ def step_impl(context):
 def step_impl(context):
     context.driver.get('http://mys01.fit.vutbr.cz:8014/index.php?route=common/home')
 
+
 @given('user is logged in')
 def step_impl(context):
-    context.driver.find_element(By.CSS_SELECTOR, ".dropdown .hidden-xs").click()
-    account = context.driver.find_element(By.LINK_TEXT, "My Account").text
+    context.driver.get('http://mys01.fit.vutbr.cz:8014/index.php?route=account/account')
+    account = None
+    try:
+        account = context.driver.find_element_by_xpath('/html/body/div[2]/div/div/h2[1]').text
+    except:
+        pass
+
     time.sleep(1)
-    context.driver.find_element(By.CSS_SELECTOR, ".dropdown .hidden-xs").click()
+    if account is None:  # user is not logged in
+        global mail
+        context.driver.find_element(By.ID, "input-email").clear()
+        context.driver.find_element(By.ID, "input-email").click()
+        context.driver.find_element(By.ID, "input-email").send_keys(mail)
+        context.driver.find_element(By.ID, "input-password").clear()
+        context.driver.find_element(By.ID, "input-password").click()
+        context.driver.find_element(By.ID, "input-password").send_keys("12345")
+        context.driver.find_element_by_xpath('/html/body/div[2]/div/div/div/div[2]/div/form/input').click()
+    else:
+        pass
+
 
 @given('"My Account" dropdown menu is opened')
-def step_impl(context): 
+def step_impl(context):
     context.driver.find_element_by_xpath('/html/body/nav/div/div[2]/ul/li[2]/a').click()
 
 
 @when('user clicks on "Logout" button')
 def step_impl(context):
     context.driver.find_element(By.LINK_TEXT, "Logout").click()
+
 
 @then('user is logged out')
 def step_impl(context):
