@@ -50,6 +50,7 @@ def step_impl(context):
     context.driver.find_element(By.ID, "input-password").send_keys("12345")
     context.driver.find_element(By.ID, "input-confirm").click()
     context.driver.find_element(By.ID, "input-confirm").send_keys("12345")
+    context.mail = mail
     
 
 
@@ -68,14 +69,14 @@ def step_impl(context):
     context.driver.get('http://mys01.fit.vutbr.cz:8014/index.php?route=account/success')
     title = context.driver.find_element_by_xpath('/html/body/div[2]/div/div/h1').text
     # assert 'Your Account Has Been Created!' in title
-    time.sleep(2)
+
     context.driver.find_element_by_xpath('/html/body/div[2]/div/div/div/div/a').click()
-    time.sleep(2)
 
 @given("web browser is at e-shop login page")
 def step_impl(context):
-    context.browser.find_element(By.CSS_SELECTOR, ".dropdown .hidden-xs").click()
-    context.browser.find_element(By.LINK_TEXT, "Logout").click()
+    context.driver.find_element(By.CSS_SELECTOR, ".dropdown .hidden-xs").click()
+    time.sleep(1)
+    context.driver.find_element(By.LINK_TEXT, "Logout").click()
 
     context.driver.get('http://mys01.fit.vutbr.cz:8014/index.php?route=account/login')
 
@@ -88,29 +89,42 @@ def step_impl(context):
     context.driver.find_element(By.ID, "input-email").send_keys(mail)
     context.driver.find_element(By.ID, "input-password").clear()
     context.driver.find_element(By.ID, "input-password").click()
-    context.driver.find_element(By.ID, "input-password").send_keys("12345abcd")
-    print('aaaaadadddddddd')
-    print(mail)
+    context.driver.find_element(By.ID, "input-password").send_keys("12345")
 
 
 @when('user clicks on "Login" button')
 def step_impl(context):
-    time.sleep(9)
+
     context.driver.find_element_by_xpath('/html/body/div[2]/div/div/div/div[2]/div/form/input').click()
-    time.sleep(3)
 
 @then("user is logged in")
 def step_impl(context):
     context.driver.get('http://mys01.fit.vutbr.cz:8014/index.php?route=account/account')
-    time.sleep(3)
-    # print(context.driver.find_element_by_xpath('//*[@id="content"]/h2[1]').text)
+    account = context.driver.find_element_by_xpath('/html/body/div[2]/div/div/h2[1]').text
 
-    test = context.driver.find_element_by_xpath('/html/body/div[2]/div/div/div/div[1]/div/h2').text
-    time.sleep(3)
-    # account = context.driver.find_element_by_xpath('/html/body/nav/div/div[2]/ul/li[2]/ul/li[1]/a').text
-    # context.driver.find_element(By.CSS_SELECTOR, ".dropdown .hidden-xs").click()
-    # context.driver.find_element(By.CSS_SELECTOR, ".dropdown-menu > li:nth-child(1) > a").click()
-    # account = context.driver.find_element(By.CSS_SELECTOR, "h2:nth-child(1)").text
 
-    # assert 'My Account' in account
-    assert 'New Customer' in test
+@given('web browser is at e-shop site')
+def step_impl(context):
+    context.driver.get('http://mys01.fit.vutbr.cz:8014/index.php?route=common/home')
+
+@given('user is logged in')
+def step_impl(context):
+    context.driver.find_element(By.CSS_SELECTOR, ".dropdown .hidden-xs").click()
+    account = context.driver.find_element(By.LINK_TEXT, "My Account").text
+    time.sleep(1)
+    context.driver.find_element(By.CSS_SELECTOR, ".dropdown .hidden-xs").click()
+
+@given('"My Account" dropdown menu is opened')
+def step_impl(context): 
+    context.driver.find_element_by_xpath('/html/body/nav/div/div[2]/ul/li[2]/a').click()
+
+
+@when('user clicks on "Logout" button')
+def step_impl(context):
+    context.driver.find_element(By.LINK_TEXT, "Logout").click()
+
+@then('user is logged out')
+def step_impl(context):
+    logout = context.driver.find_element_by_xpath('/html/body/div[2]/div/div/h1').text
+
+    assert 'Account Logout' in logout

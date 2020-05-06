@@ -13,10 +13,10 @@ Feature: User account operations
     And  all required fields are filled
     When user clicks on "Login" button
     Then user is logged in
-#
-#  Scenario: Logout
-#    Given web browser is at e-shop site
-#    And user is logged in
-#    And "My Account" dropdown menu is opened
-#    When user clicks on "Logout" button
-#    Then user is logged out
+
+ Scenario: Logout
+   Given web browser is at e-shop site
+   And user is logged in
+   And "My Account" dropdown menu is opened
+   When user clicks on "Logout" button
+   Then user is logged out

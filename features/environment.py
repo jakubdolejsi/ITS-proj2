@@ -13,6 +13,7 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 #
 # def after_all(context):
 #     context.browser.quit()
+mail = ''
 
 def before_all(context):
     context.driver = webdriver.Chrome()
